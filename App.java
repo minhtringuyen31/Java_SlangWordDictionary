@@ -3,9 +3,6 @@ import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EmptyBorder;
-
-import javax.swing.JOptionPane.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,13 +25,14 @@ public class App extends JPanel {
     private UI ui;
     private Dictionary dic;
     private Dictionary histoSerial;
-
+    ArrayList<String> keySet;
     private DefaultTableModel model;
 
     public App() throws IOException {
-        ui = new UI();
         dictionary = loadDictionaryFromTextFile(fileName);
         dic.setDictionary(dictionary);
+        keySet = new ArrayList<String>(dictionary.keySet());
+        setupUI();
 
         model = new DefaultTableModel();
         Vector headerColumn = new Vector();
@@ -64,6 +62,7 @@ public class App extends JPanel {
         ui.slangTable.getColumnModel().getColumn(0).setMaxWidth(45);
         ui.slangTable.getColumnModel().getColumn(1).setMaxWidth(120);
         ui.slangTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+
     }
 
     public HashMap<String, ArrayList<String>> loadDictionaryFromTextFile(String fileName) {
