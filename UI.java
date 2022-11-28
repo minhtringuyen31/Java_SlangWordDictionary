@@ -9,9 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
 import java.awt.event.KeyListener;
 import java.awt.image.AreaAveragingScaleFilter;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Component.*;
 import java.util.*;
 import java.io.IOException;;
 
@@ -98,40 +101,40 @@ public class UI extends JPanel {
                 // begin: search panel
                 searchLabel.setText("Keyword: ");
 
-                searchField.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                // searchFieldActionPerformed(evt);
+                searchField.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                                searchFieldActionPerformed(evt);
                         }
                 });
-                searchField.addKeyListener(new java.awt.event.KeyAdapter() {
-                        public void keyReleased(java.awt.event.KeyEvent evt) {
-                                // searchFieldKeyReleased(evt);
+                searchField.addKeyListener(new KeyAdapter() {
+                        public void keyReleased(KeyEvent evt) {
+                                searchFieldKeyReleased(evt);
                         }
                 });
 
                 searchType.setModel(new DefaultComboBoxModel<>(new String[] { "Slang", "definitiontion" }));
-                searchType.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                // searchComboBoxActionPerformed(evt);
+                searchType.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                                searchComboBoxActionPerformed(evt);
                         }
                 });
 
                 searchButton.setText("Search");
-                searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                // searchButtonMouseClicked(evt);
+                searchButton.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                                searchButtonMouseClicked(evt);
                         }
                 });
 
                 historyButton.setText("History");
-                historyButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                // historyButtonMouseClicked(evt);
+                historyButton.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                                historyButtonMouseClicked(evt);
                         }
                 });
-                historyButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                // historyButtonActionPerformed(evt);
+                historyButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                                historyButtonActionPerformed(evt);
                         }
                 });
                 // End: search panel
@@ -147,9 +150,9 @@ public class UI extends JPanel {
                                 new String[] {
                                                 "Index", "Slang", "definitiontion"
                                 }));
-                slangTable.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                // slangTableMouseClicked(evt);
+                slangTable.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                                slangTableMouseClicked(evt);
                         }
                 });
                 tableScrollPanel.setViewportView(slangTable);
@@ -158,13 +161,13 @@ public class UI extends JPanel {
                 }
 
                 resetButton.setText("Reset Default Dictionary");
-                resetButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                // try {
-                                // // resetButtonActionPerformed(evt);
-                                // } catch (IOException e) {
-                                // e.printStackTrace();
-                                // }
+                resetButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                                try {
+                                        resetButtonActionPerformed(evt);
+                                } catch (IOException e) {
+                                        e.printStackTrace();
+                                }
                         }
                 });
                 resetPanel.add(resetButton);
@@ -172,14 +175,14 @@ public class UI extends JPanel {
 
                 // Start: Feature Panel
                 randomButton.setText("Random Slang");
-                randomButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                // randomButtonMouseClicked(evt);
+                randomButton.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                                randomButtonMouseClicked(evt);
                         }
                 });
-                randomButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                // randomButtonActionPerformed(evt);
+                randomButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                                randomButtonActionPerformed(evt);
                         }
                 });
 
@@ -188,40 +191,40 @@ public class UI extends JPanel {
                 definitionLabel.setText("Definition:");
 
                 addButton.setText("Add");
-                addButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                // addButtonMouseClicked(evt);
+                addButton.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                                addButtonMouseClicked(evt);
                         }
                 });
-                addButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                // addButtonActionPerformed(evt);
+                addButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                                addButtonActionPerformed(evt);
                         }
                 });
                 addEditPanel.add(addButton);
 
                 editButton.setText("Edit");
-                editButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                // editButtonMouseClicked(evt);
+                editButton.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                                editButtonMouseClicked(evt);
                         }
                 });
-                editButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                // editButtonActionPerformed(evt);
+                editButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                                editButtonActionPerformed(evt);
                         }
                 });
                 addEditPanel.add(editButton);
 
                 deleteButton.setText("Delete");
-                deleteButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                // deleteButtonMouseClicked(evt);
+                deleteButton.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                                deleteButtonMouseClicked(evt);
                         }
                 });
-                deleteButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                // deleteButtonActionPerformed(evt);
+                deleteButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                                deleteButtonActionPerformed(evt);
                         }
                 });
                 addEditPanel.add(deleteButton);
@@ -267,20 +270,20 @@ public class UI extends JPanel {
 
                 // modeComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Slang",
                 // "definitiontion" }));
-                // modeComboBox.addActionListener(new java.awt.event.ActionListener() {
-                // public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // modeComboBox.addActionListener(new ActionListener() {
+                // public void actionPerformed(ActionEvent evt) {
                 // modeComboBoxActionPerformed(evt);
                 // }
                 // });
 
                 // playButton.setText("Let's Play Quiz Game");
-                // playButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // playButton.addMouseListener(new MouseAdapter() {
+                // public void mouseClicked(MouseEvent evt) {
                 // playButtonMouseClicked(evt);
                 // }
                 // });
-                // playButton.addActionListener(new java.awt.event.ActionListener() {
-                // public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // playButton.addActionListener(new ActionListener() {
+                // public void actionPerformed(ActionEvent evt) {
                 // playButtonActionPerformed(evt);
                 // }
                 // });
@@ -321,8 +324,8 @@ public class UI extends JPanel {
 
                 // aButton.setText("A. ");
                 // aButton.setEnabled(false);
-                // aButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // aButton.addMouseListener(new MouseAdapter() {
+                // public void mouseClicked(MouseEvent evt) {
                 // aButtonMouseClicked(evt);
                 // }
                 // });
@@ -330,8 +333,8 @@ public class UI extends JPanel {
 
                 // bButton.setText("B. ");
                 // bButton.setEnabled(false);
-                // bButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // bButton.addMouseListener(new MouseAdapter() {
+                // public void mouseClicked(MouseEvent evt) {
                 // bButtonMouseClicked(evt);
                 // }
                 // });
@@ -339,8 +342,8 @@ public class UI extends JPanel {
 
                 // cButton.setText("C. ");
                 // cButton.setEnabled(false);
-                // cButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // cButton.addMouseListener(new MouseAdapter() {
+                // public void mouseClicked(MouseEvent evt) {
                 // cButtonMouseClicked(evt);
                 // }
                 // });
@@ -348,8 +351,8 @@ public class UI extends JPanel {
 
                 // dButton.setText("D. ");
                 // dButton.setEnabled(false);
-                // dButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // dButton.addMouseListener(new MouseAdapter() {
+                // public void mouseClicked(MouseEvent evt) {
                 // dButtonMouseClicked(evt);
                 // }
                 // });
@@ -357,8 +360,8 @@ public class UI extends JPanel {
 
                 // stopButton.setText("Stop Game");
                 // stopButton.setEnabled(false);
-                // stopButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // stopButton.addMouseListener(new MouseAdapter() {
+                // public void mouseClicked(MouseEvent evt) {
                 // stopButtonMouseClicked(evt);
                 // }
                 // });
@@ -366,13 +369,13 @@ public class UI extends JPanel {
 
                 // nextButton.setText("Next Question");
                 // nextButton.setEnabled(false);
-                // nextButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // nextButton.addMouseListener(new MouseAdapter() {
+                // public void mouseClicked(MouseEvent evt) {
                 // nextButtonMouseClicked(evt);
                 // }
                 // });
-                // nextButton.addActionListener(new java.awt.event.ActionListener() {
-                // public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // nextButton.addActionListener(new ActionListener() {
+                // public void actionPerformed(ActionEvent evt) {
                 // nextButtonActionPerformed(evt);
                 // }
                 // });
@@ -457,6 +460,290 @@ public class UI extends JPanel {
                 // javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))));
         }
 
+        private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchFieldActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void searchComboBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchComboBoxActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void historyButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_historyButtonActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void historyButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_historyButtonMouseClicked
+                // TODO add your handling code here:
+                HistoryForm histoFrame = new HistoryForm(history);
+        }// GEN-LAST:event_historyButtonMouseClicked
+
+        private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) throws IOException {// GEN-FIRST:event_resetButtonActionPerformed
+                dictionary.clear();
+                dictionary = new HashMap<String, ArrayList<String>>();
+                loadFromTextFile(slangFile);
+                try {
+                        dic.setDictionary(dictionary);
+                        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataSerialFileName));
+                        oos.writeObject(dic);
+
+                        oos.close();
+                } catch (Exception exp) {
+                        // System.out.println("can't reset serialize");
+                }
+                // }
+                loadDataIntoTable(dictionary);
+        }// GEN-LAST:event_resetButtonActionPerformed
+
+        private void randomButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_randomButtonActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addButtonActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_editButtonActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteButtonActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_playButtonActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_nextButtonActionPerformed
+                // TODO add your handling code here:
+        }
+
+        private void slangTableMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_slangTableMouseClicked
+                selectedIndex = slangTable.getSelectedRow();
+
+                // idField.setText(model.getValueAt(selectedIndex, 0).toString());
+                slangField.setText(model.getValueAt(selectedIndex, 1).toString());
+                definiField.setText(model.getValueAt(selectedIndex, 2).toString());
+                // gpaField.setText(model.getValueAt(selectedIndex, 3).toString());
+                // addressField.setText(model.getValueAt(selectedIndex, 4).toString());
+                // imageField.setText(model.getValueAt(selectedIndex, 5).toString());
+                // noteField.setText(model.getValueAt(selectedIndex, 6).toString()); // TODO add
+                // your handling code here:
+        }// GEN-LAST:event_slangTableMouseClicked
+
+        private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_searchButtonMouseClicked
+                // TODO add your handling code here:
+
+                if (searchField.getText().equals("")) {
+                        JOptionPane.showMessageDialog(this, "Please enter something to search");
+                } else {
+                        try {
+                                String keyword = searchField.getText().toString();
+                                String typeToSearch = (String) searchComboBox.getSelectedItem();
+                                HashMap<String, ArrayList<String>> results = new HashMap<String, ArrayList<String>>();
+                                if (typeToSearch.equals("Definition")) {
+                                        results = searchByDefinition(keyword);
+                                        loadDataIntoTable(results);
+                                } else if (typeToSearch.equals("Slang")) {
+                                        results = searchByKeySlang(keyword);
+                                        loadDataIntoTable(results);
+                                }
+
+                        } catch (Exception e) {
+                                JOptionPane.showMessageDialog(this, "Please Enter full information or valid field");
+                        }
+                }
+
+        }// GEN-LAST:event_searchButtonMouseClicked
+
+        private void searchFieldKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_searchFieldKeyReleased
+                // TODO add your handling code here:
+                if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                        if (searchField.getText().equals("")) {
+                                loadDataIntoTable(dictionary);
+                        }
+                }
+        }// GEN-LAST:event_searchFieldKeyReleased
+
+        private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_addButtonMouseClicked
+                // TODO add your handling code here:
+                if (slangField.getText().equals("") || definiField.getText().equals("")) {
+                        JOptionPane.showMessageDialog(this, "Please Enter full information");
+                } else {
+                        try {
+                                String slang = slangField.getText().toString();
+                                String definition = definiField.getText().toString();
+
+                                if (dictionary.containsKey(slang) == true) {
+                                        Object[] options = { "Duplicate", "Overwrite", "Cancel" };
+                                        int result = JOptionPane.showOptionDialog(this,
+                                                        "This slang is existed. Do you want make duplicate?",
+                                                        "Choose Duplicate or Overwrite",
+                                                        JOptionPane.YES_NO_CANCEL_OPTION,
+                                                        JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                        if (result == JOptionPane.YES_OPTION) {
+                                                // System.out.println("duplicate");
+                                                ArrayList<String> oldDefinition = dictionary.get(slang);
+                                                oldDefinition.add(definition);
+                                                dictionary.put(slang, oldDefinition);
+                                        } else if (result == JOptionPane.NO_OPTION) {
+                                                // System.out.println("Overwrite");
+                                                ArrayList<String> definitions = new ArrayList<String>();
+                                                definitions.add(definition);
+                                                dictionary.put(slang, definitions);
+                                        } else if (result == JOptionPane.CANCEL_OPTION) {
+                                                // System.out.println("cancel");
+                                                return;
+                                        }
+
+                                } else {
+                                        ArrayList<String> definitions = new ArrayList<String>();
+                                        definitions.add(definition);
+                                        dictionary.put(slang, definitions);
+                                }
+                                JOptionPane.showMessageDialog(this, "Add Successfully");
+                                slangField.setText("");
+                                definiField.setText("");
+                                loadDataIntoTable(dictionary);
+                        } catch (Exception e) {
+                                JOptionPane.showMessageDialog(this, "There are some error, please try again");
+                        }
+                }
+
+        }// GEN-LAST:event_addButtonMouseClicked
+
+        private void editButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_editButtonMouseClicked
+                // TODO add your handling code here:
+                selectedIndex = slangTable.getSelectedRow();
+                if (dictionary.size() == 0) {
+                        JOptionPane.showMessageDialog(this,
+                                        "Nothing here to update");
+                } else if (selectedIndex == -1) {
+                        JOptionPane.showMessageDialog(this,
+                                        "Let's pick some slang to update");
+                } else if (slangField.getText().equals("") || definiField.getText().equals("")) {
+                        JOptionPane.showMessageDialog(this, "Please enter full information");
+                } else {
+                        try {
+                                String slang = slangField.getText().toString();
+                                String newDefinition = definiField.getText().toString();
+                                String oldSlang = model.getValueAt(selectedIndex, 1).toString();
+                                String oldDefinition = model.getValueAt(selectedIndex, 2).toString();
+                                int ret = JOptionPane.showConfirmDialog(this, "Do you want to update?", "Confirm",
+                                                JOptionPane.YES_NO_OPTION);
+                                if (ret != JOptionPane.YES_OPTION) {
+                                        return;
+                                }
+                                if (dictionary.containsKey(slang) == true) {
+                                        ArrayList<String> oldDefis = dictionary.get(slang);
+                                        boolean founded = false;
+                                        for (int i = 0; i < oldDefis.size(); i++) {
+                                                if (oldDefis.get(i).equals(oldDefinition)) {
+                                                        founded = true;
+                                                        oldDefis.set(i, newDefinition);
+                                                        break;
+                                                }
+                                        }
+                                        if (founded) {
+                                                dictionary.put(slang, oldDefis);
+                                                JOptionPane.showMessageDialog(this, "Edit Successfully");
+                                                slangField.setText("");
+                                                definiField.setText("");
+                                                loadDataIntoTable(dictionary);
+                                                return;
+                                        } else {
+                                                JOptionPane.showMessageDialog(this,
+                                                                "Old value doesn't match anything of new key to update");
+                                        }
+                                } else {
+                                        JOptionPane.showMessageDialog(this, "This key is not exist to update");
+                                }
+                        } catch (Exception e) {
+                                JOptionPane.showMessageDialog(this, "Please try again");
+                        }
+
+                }
+
+        }// GEN-LAST:event_editButtonMouseClicked
+
+        private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_deleteButtonMouseClicked
+                // TODO add your handling code here:
+                selectedIndex = slangTable.getSelectedRow();
+                if (dictionary.size() == 0) {
+                        JOptionPane.showMessageDialog(this,
+                                        "Nothing here to update");
+                } else if (selectedIndex == -1) {
+                        JOptionPane.showMessageDialog(this,
+                                        "Let's pick some slang to delete");
+                } else if (slangField.getText().equals("") || definiField.getText().equals("")) {
+                        JOptionPane.showMessageDialog(this, "Please enter full information");
+                } else {
+                        try {
+                                String slang = slangField.getText().toString();
+                                String newDefinition = definiField.getText().toString();
+                                String oldSlang = model.getValueAt(selectedIndex, 1).toString();
+                                String oldDefinition = model.getValueAt(selectedIndex, 2).toString();
+                                int ret = JOptionPane.showConfirmDialog(this, "Do you want to delete?", "Confirm",
+                                                JOptionPane.YES_NO_OPTION);
+                                if (ret != JOptionPane.YES_OPTION) {
+                                        return;
+                                }
+                                if (dictionary.containsKey(slang) == true) {
+                                        ArrayList<String> oldDefis = dictionary.get(slang);
+                                        int foundedAt = -1;
+
+                                        for (int i = 0; i < oldDefis.size(); i++) {
+                                                if (oldDefis.get(i).equals(newDefinition)) {
+                                                        foundedAt = i;
+                                                        break;
+                                                }
+                                        }
+                                        if (foundedAt >= 0) {
+                                                oldDefis.remove(foundedAt);
+                                                if (oldDefis.size() == 0) {
+                                                        dictionary.remove(slang);
+                                                } else {
+                                                        dictionary.put(slang, oldDefis);
+                                                }
+                                                JOptionPane.showMessageDialog(this, "Delete Successfully");
+                                                slangField.setText("");
+                                                definiField.setText("");
+                                                loadDataIntoTable(dictionary);
+                                                return;
+                                        } else {
+                                                JOptionPane.showMessageDialog(this,
+                                                                "This value doesn't match anything to delete");
+                                        }
+                                } else {
+                                        JOptionPane.showMessageDialog(this, "This key is not exist to delete");
+                                }
+                        } catch (Exception e) {
+                                JOptionPane.showMessageDialog(this, "Please try again");
+                        }
+
+                }
+        }// GEN-LAST:event_deleteButtonMouseClicked
+
+        public void randomSlang() {
+                Random random = new Random();
+                int randomIndex = random.nextInt(keySet.size());
+                String key = keySet.get(randomIndex);
+                String defini = dictionary.get(key).get(0);
+                String randomWord = key + ": " + defini;
+                randomLabel.setText(randomWord);
+        }
+
+        private void randomButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_randomButtonMouseClicked
+                // TODO add your handling code here:
+                // Random random = new Random();
+                // int randomIndex = random.nextInt(keySet.size());
+                // String key = keySet.get(randomIndex);
+                // String defini = dictionary.get(key).get(0);
+                // String randomWord = key + ": " + defini;
+                // randomLabel.setText(randomWord);
+                randomSlang();
+        }// G
+
         public static void createAndShowGUI() {
                 JFrame.setDefaultLookAndFeelDecorated(true);
                 JFrame frame = new JFrame("Slang Words Dictionary");
@@ -464,9 +751,9 @@ public class UI extends JPanel {
 
                 // UI.setOpaque(true);
 
-                // frame.addWindowListener(new java.awt.event.WindowAdapter() {
+                // frame.addWindowListener(new WindowAdapter() {
                 // @Override
-                // public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                // public void windowClosing(WindowEvent windowEvent) {
                 // ui.save();
                 // }
                 // });
