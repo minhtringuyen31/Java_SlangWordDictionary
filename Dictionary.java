@@ -21,9 +21,6 @@ public class Dictionary {
     }
 
     public HashMap<String, ArrayList<String>> searchByKeySlang(String key) {
-        // Option: chuyen key ve dang chu thuong
-        // String standardKey = key.toLowerCase();
-
         HashMap<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>();
         for (HashMap.Entry<String, ArrayList<String>> entry : _dictionary.entrySet()) {
             if (entry.getKey().contains(key)) {
@@ -35,8 +32,6 @@ public class Dictionary {
     }
 
     public HashMap<String, ArrayList<String>> searchByDefinition(String key) {
-        // Option: chuyen key ve dang chu thuong
-        // String standardKey = key.toLowerCase();
         HashMap<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>();
         for (HashMap.Entry<String, ArrayList<String>> entry : _dictionary.entrySet()) {
             boolean check = false;
@@ -47,7 +42,6 @@ public class Dictionary {
             }
             if (check) {
                 res.put(entry.getKey(), entry.getValue());
-
             }
         }
         return res;
@@ -66,21 +60,4 @@ public class Dictionary {
     public void addANewSlangWord(String slang, ArrayList<String> definition) {
         _dictionary.put(slang, definition);
     }
-
-    // public void deleteASlangWord(){
-    // try{
-    // String slang =Slang.F
-    // }
-    // }
-
-    public void randomSlangWord() {
-        ArrayList<String> keySet = new ArrayList<String>(_dictionary.keySet());
-        Random rd = new Random();
-        int rdIndex = rd.nextInt(keySet.size());
-        String key = keySet.get(rdIndex);
-        String definition = _dictionary.get(key).get(0);
-        String rdWord = key + ": " + definition;
-        // rdLabel.settext(rdWord);
-    }
-
 }

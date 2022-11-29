@@ -17,26 +17,25 @@ import java.awt.image.AreaAveragingScaleFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Component.*;
 import java.util.*;
-import java.io.IOException;;
+import java.util.Vector.*;
+import java.io.IOException;
 
 public class App extends JPanel {
-    private HashMap<String, ArrayList<String>> dictionary = new HashMap<String, ArrayList<String>>();
-    private HashMap<String, ArrayList<String>> history = new HashMap<String, ArrayList<String>>();
+    private Dictionary dic;
+    private Dictionary historySearch;
     private String fileName = "slang.txt";
     private String constantData = "defaultDic.txt";
     private String historyData = "historySearch.txt";
-    private Dictionary dic;
-    private Dictionary histoSerial;
+    private HashMap<String, ArrayList<String>> dictionary = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> history = new HashMap<String, ArrayList<String>>();
     ArrayList<String> keySet;
     private DefaultTableModel model;
     private String questionVal;
     private String answerVal;
 
     public App() throws IOException {
-        // dictionary = loadDictionaryFromTextFile(fileName);
-        // dic.setDictionary(dictionary);
         dic = new Dictionary();
-        histoSerial = new Dictionary();
+        historySearch = new Dictionary();
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(constantData));
             dic = (Dictionary) ois.readObject();
@@ -48,22 +47,19 @@ public class App extends JPanel {
                 dic.setDictionary(dictionary);
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(historyData));
                 oos.writeObject(dic);
-
                 oos.close();
             } catch (Exception exp) {
             }
         }
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(historyData));
-            histoSerial = (Dictionary) ois.readObject();
-            history = histoSerial.getDictionary();
+            historySearch = (Dictionary) ois.readObject();
+            history = historySearch.getDictionary();
             ois.close();
         } catch (Exception e) {
         }
-
         keySet = new ArrayList<String>(dictionary.keySet());
         setupUI();
-        // loadDataIntoTable(dictionary);
     }
 
     public HashMap<String, ArrayList<String>> loadDictionaryFromTextFile(String fileName) {
@@ -87,7 +83,7 @@ public class App extends JPanel {
             }
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println("Error in readFromTextFile !!!");
+            System.out.println("Error: loadDictionaryFromTextFile!!!");
             e.printStackTrace();
         }
         System.out.println("Load Dictionary Data Successful !!");
@@ -114,23 +110,20 @@ public class App extends JPanel {
             }
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println("Error in readFromTextFile !!!");
+            System.out.println("Error: loadHistory !!!");
             e.printStackTrace();
         }
         System.out.println("Load Dictionary Data Successful !!");
         return dictionary;
     }
 
-    public void writeHistoryToTextFile(HashMap<String, ArrayList<String>> map, String fileName) {
-        // FileWriter fileWriter = null;
+    public void writeHistoryToTextFile(HashMap<String, ArrayList<String>> history, String fileName) {
         try {
             File file = new File(fileName);
-
             FileWriter fileWriter = new FileWriter(file, true);
-
             BufferedWriter bw = new BufferedWriter(fileWriter);
             bw.write("\n");
-            for (Map.Entry<String, ArrayList<String>> entry : map.entrySet()) {
+            for (Map.Entry<String, ArrayList<String>> entry : history.entrySet()) {
                 String data = entry.getKey() + "`" + entry.getValue();
                 System.out.println(data);
                 bw.write(data);
@@ -149,15 +142,11 @@ public class App extends JPanel {
         Vector headerColumn = new Vector();
         headerColumn.add("ID");
         headerColumn.add("Slang");
-        headerColumn.add("Definition");
-
+        headerColumn.add("Meaning");
         model.setColumnIdentifiers(headerColumn);
-        // set data
         int i = 0;
         for (Map.Entry<String, ArrayList<String>> entry : dictionary.entrySet()) {
-
             ArrayList<String> values = entry.getValue();
-
             for (String e : values) {
                 i++;
                 Vector row = new Vector();
@@ -168,14 +157,14 @@ public class App extends JPanel {
             }
         }
         slangTable.setModel(model);
-        slangTable.getColumnModel().getColumn(0).setMaxWidth(45);
-        slangTable.getColumnModel().getColumn(1).setMaxWidth(120);
+        slangTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        slangTable.getColumnModel().getColumn(1).setMaxWidth(100);
         slangTable.getColumnModel().getColumn(1).setPreferredWidth(100);
     }
 
     public String appTitle = "SLANG WORDS DICTIONARY";
     public JPanel featurePanel;
-    public JPanel headerPane;
+    public JPanel appTitlePanel;
     public JLabel titleLabel;
     public JPanel searchPanel;
     public JLabel searchLabel;
@@ -205,11 +194,12 @@ public class App extends JPanel {
     public JButton deleteButton;
 
     public JPanel quizPanel;
+    public JPanel quizTitlePanel;
     public JLabel quizTitle;
-    public JButton playButton;
-    public JComboBox modeComboBox;
+    public JButton startQuizButton;
+    public JComboBox quizMode;
     public JPanel introPanel;
-    public JPanel questionPane;
+    public JPanel questionPanel;
     public JLabel questionLabel;
     public JPanel answerPanel;
     public JButton aButton;
@@ -223,6 +213,7 @@ public class App extends JPanel {
     public void setupUI() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        appTitlePanel = new JPanel();
         titleLabel = new JLabel();
         searchPanel = new JPanel();
         searchLabel = new JLabel();
@@ -254,11 +245,12 @@ public class App extends JPanel {
         deleteButton = new JButton();
 
         quizPanel = new JPanel();
+        quizTitlePanel = new JPanel();
         quizTitle = new JLabel();
         introPanel = new JPanel();
-        playButton = new JButton();
-        modeComboBox = new JComboBox<>();
-        questionPane = new JPanel();
+        startQuizButton = new JButton();
+        quizMode = new JComboBox<>();
+        questionPanel = new JPanel();
         questionLabel = new JLabel();
 
         answerPanel = new JPanel();
@@ -272,8 +264,9 @@ public class App extends JPanel {
 
         titleLabel.setText(appTitle);
         titleLabel.setFont(new Font("Serif", Font.BOLD, 30));
-        add(titleLabel, CENTER_ALIGNMENT);
-        // begin: search panel
+        appTitlePanel.add(titleLabel, CENTER_ALIGNMENT);
+        add(appTitlePanel);
+        // Start: Search panel
         searchLabel.setText("Keyword: ");
 
         searchField.addActionListener(new ActionListener() {
@@ -324,16 +317,28 @@ public class App extends JPanel {
                 displayDictionaryActionPerformed(evt);
             }
         });
-        // End: search panel
+
+        resetButton.setText("Reset");
+        resetButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                try {
+                    resetButtonActionPerformed(evt);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         searchPanel.setLayout(new FlowLayout());
         searchPanel.add(searchLabel);
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
         searchPanel.add(historyButton);
         searchPanel.add(displayDictionary);
+        searchPanel.add(resetButton);
         add(searchPanel, LEFT_ALIGNMENT);
+        // End: Search Panel
 
-        // Start: Dictionary panel
+        // Start: Dictionary Panel
         slangTable.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Index", "Slang", "Meaning" }));
         slangTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
@@ -345,18 +350,7 @@ public class App extends JPanel {
             slangTable.getColumnModel().getColumn(0).setResizable(false);
         }
 
-        resetButton.setText("Reset Default Dictionary");
-        resetButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                try {
-                    resetButtonActionPerformed(evt);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        resetPanel.add(resetButton);
-        // End: dictionary Panel
+        // End: Dictionary Panel
         tablePanel.add(tableScrollPanel);
         add(tablePanel);
 
@@ -415,9 +409,7 @@ public class App extends JPanel {
             }
         });
         addEditPanel.add(deleteButton);
-
-        // featurePanel.setBorder(new CompoundBorder(new TitledBorder("Feature"), new
-        // EmptyBorder(5,5,5,5)));
+        // Layout Feature Panel
         featurePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -447,42 +439,43 @@ public class App extends JPanel {
         featurePanel.add(meaningField, gbc);
         featurePanel.setBorder(new CompoundBorder(new TitledBorder("Function"), new EmptyBorder(5, 5, 5, 5)));
         add(featurePanel);
+        // End: Feature Panel
 
         // Start: Quiz Panel
-        // playPane.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0,
-        // 0)));
-
         quizPanel.setLayout(new BoxLayout(quizPanel, BoxLayout.Y_AXIS));
 
         quizTitle.setText("LET START THE QUIZ");
         quizTitle.setFont(new Font("Serif", Font.BOLD, 25));
-        playButton.setText("Start Quiz");
-        playButton.addMouseListener(new MouseAdapter() {
+        quizTitlePanel.add(quizTitle, CENTER_ALIGNMENT);
+
+        startQuizButton.setText("Start Quiz");
+        startQuizButton.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                playButtonMouseClicked(evt);
+                startQuizButtonMouseClicked(evt);
             }
         });
-        playButton.addActionListener(new ActionListener() {
+        startQuizButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                playButtonActionPerformed(evt);
+                startQuizButtonActionPerformed(evt);
             }
         });
 
-        modeComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Slang", "Definition" }));
-        modeComboBox.addActionListener(new ActionListener() {
+        quizMode.setModel(new DefaultComboBoxModel<>(new String[] { "Slang", "Meaning" }));
+        quizMode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                modeComboBoxActionPerformed(evt);
+                quizModeActionPerformed(evt);
             }
         });
 
-        questionLabel.setText("QUESTION");
+        questionLabel.setText("");
+        questionPanel.add(questionLabel, CENTER_ALIGNMENT);
 
-        introPanel.add(playButton, LEFT_ALIGNMENT);
-        introPanel.add(modeComboBox, RIGHT_ALIGNMENT);
-        quizPanel.add(quizTitle);
+        introPanel.add(startQuizButton, LEFT_ALIGNMENT);
+        introPanel.add(quizMode, RIGHT_ALIGNMENT);
+        quizPanel.add(quizTitlePanel);
         quizPanel.add(introPanel);
 
-        quizPanel.add(questionLabel);
+        quizPanel.add(questionPanel);
 
         answerPanel.setLayout(new GridLayout(2, 2, 10, 10));
 
@@ -531,53 +524,32 @@ public class App extends JPanel {
                 stopButtonMouseClicked(evt);
             }
         });
-
-        nextButton.setText("Next Question");
-        nextButton.setEnabled(false);
-        nextButton.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-                nextButtonMouseClicked(evt);
-            }
-        });
-        nextButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                nextButtonActionPerformed(evt);
-            }
-        });
-        actionQuizPanel.add(nextButton, RIGHT_ALIGNMENT);
         actionQuizPanel.add(stopButton, LEFT_ALIGNMENT);
 
         quizPanel.add(actionQuizPanel);
         quizPanel.setBorder(new CompoundBorder(new TitledBorder("Quiz"), new EmptyBorder(5, 5, 5, 5)));
-
         add(quizPanel);
     }
 
     private void searchFieldActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
     private void searchComboBoxActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
     private void historyButtonActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
     private void historyButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
         history = loadHistory(historyData);
-        // History histoFrame = new History(history);
         loadDataIntoTable(history);
+    }
+
+    private void displayDictionaryActionPerformed(ActionEvent evt) {
     }
 
     private void displayDictionaryMouseClicked(MouseEvent evt) {
         loadDataIntoTable(dictionary);
-    }
-
-    private void displayDictionaryActionPerformed(ActionEvent evt) {
-
     }
 
     private void resetButtonActionPerformed(ActionEvent evt) throws IOException {
@@ -588,7 +560,6 @@ public class App extends JPanel {
             dic.setDictionary(dictionary);
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(constantData));
             oos.writeObject(dic);
-
             oos.close();
         } catch (Exception exp) {
         }
@@ -597,27 +568,18 @@ public class App extends JPanel {
     }
 
     private void randomButtonActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
     private void addButtonActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
     private void editButtonActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
     private void deleteButtonActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
-    private void playButtonActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void nextButtonActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
+    private void startQuizButtonActionPerformed(ActionEvent evt) {
     }
 
     private void slangTableMouseClicked(MouseEvent evt) {
@@ -628,9 +590,9 @@ public class App extends JPanel {
     }
 
     private void searchButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+
         if (searchField.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Please enter something to search");
+            JOptionPane.showMessageDialog(this, "Invalid !! Nothing To Search");
         } else {
             try {
                 String keyword = searchField.getText().toString();
@@ -646,13 +608,13 @@ public class App extends JPanel {
                     writeHistoryToTextFile(results, historyData);
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Please Enter full information or valid field");
+                JOptionPane.showMessageDialog(this, "Invalid !! Enter Again");
             }
         }
     }
 
     private void searchFieldKeyReleased(KeyEvent evt) {
-        // TODO add your handling code here:
+
         if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
             if (searchField.getText().equals("")) {
                 loadDataIntoTable(dictionary);
@@ -661,9 +623,9 @@ public class App extends JPanel {
     }
 
     private void addButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+
         if (slangField.getText().equals("") || meaningField.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Please Enter full information");
+            JOptionPane.showMessageDialog(this, "Invalid !! Please Enter All Information");
         } else {
             try {
                 String slang = slangField.getText().toString();
@@ -698,30 +660,30 @@ public class App extends JPanel {
                 meaningField.setText("");
                 loadDataIntoTable(dictionary);
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "There are some error, please try again");
+                JOptionPane.showMessageDialog(this, "Error !! Try Again");
             }
         }
 
     }
 
     private void editButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+
         int selectedIndex = slangTable.getSelectedRow();
         if (dictionary.size() == 0) {
             JOptionPane.showMessageDialog(this,
-                    "Nothing here to update");
+                    "Nothing To Update");
         } else if (selectedIndex == -1) {
             JOptionPane.showMessageDialog(this,
                     "Let's pick some slang to update");
         } else if (slangField.getText().equals("") || meaningField.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Please enter full information");
+            JOptionPane.showMessageDialog(this, "Invalid !! Please Enter All Information");
         } else {
             try {
                 String slang = slangField.getText().toString();
                 String newDefinition = meaningField.getText().toString();
                 String oldSlang = model.getValueAt(selectedIndex, 1).toString();
                 String oldDefinition = model.getValueAt(selectedIndex, 2).toString();
-                int ret = JOptionPane.showConfirmDialog(this, "Do you want to update?", "Confirm",
+                int ret = JOptionPane.showConfirmDialog(this, "Do You Want To Update?", "Confirm",
                         JOptionPane.YES_NO_OPTION);
                 if (ret != JOptionPane.YES_OPTION) {
                     return;
@@ -748,16 +710,16 @@ public class App extends JPanel {
                                 "Old value doesn't match anything of new key to update");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "This key is not exist to update");
+                    JOptionPane.showMessageDialog(this, "This Slang Is Not Exist");
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Please try again");
+                JOptionPane.showMessageDialog(this, "Error !! Try again");
             }
         }
     }
 
     private void deleteButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+
         int selectedIndex = slangTable.getSelectedRow();
         if (dictionary.size() == 0) {
             JOptionPane.showMessageDialog(this,
@@ -766,14 +728,14 @@ public class App extends JPanel {
             JOptionPane.showMessageDialog(this,
                     "Let's pick some slang to delete");
         } else if (slangField.getText().equals("") || meaningField.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Please enter full information");
+            JOptionPane.showMessageDialog(this, "Invalid !! Please Enter All Information");
         } else {
             try {
                 String slang = slangField.getText().toString();
                 String newDefinition = meaningField.getText().toString();
                 String oldSlang = model.getValueAt(selectedIndex, 1).toString();
                 String oldDefinition = model.getValueAt(selectedIndex, 2).toString();
-                int ret = JOptionPane.showConfirmDialog(this, "Do you want to delete?", "Confirm",
+                int ret = JOptionPane.showConfirmDialog(this, "Do You Want To Delete?", "Confirm",
                         JOptionPane.YES_NO_OPTION);
                 if (ret != JOptionPane.YES_OPTION) {
                     return;
@@ -805,10 +767,10 @@ public class App extends JPanel {
                                 "This value doesn't match anything to delete");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "This key is not exist to delete");
+                    JOptionPane.showMessageDialog(this, "This Slang Is Not Exist");
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Please try again");
+                JOptionPane.showMessageDialog(this, "Error !! Try again");
             }
 
         }
@@ -832,7 +794,7 @@ public class App extends JPanel {
         int randomIndex = random.nextInt(keySet.size());
         String keySlang = keySet.get(randomIndex);
         String defini = dictionary.get(keySlang).get(0);
-        String modePlay = (String) modeComboBox.getSelectedItem();
+        String modePlay = (String) quizMode.getSelectedItem();
         if (modePlay.equals("Slang")) {
             randomIndex = random.nextInt(keySet.size());
             aButton.setText(dictionary.get(keySet.get(randomIndex)).get(0));
@@ -853,7 +815,7 @@ public class App extends JPanel {
                 cButton.setText(defini);
             else
                 dButton.setText(defini);
-            questionLabel.setText("Question: What is meaning of " + questionVal + "?");
+            questionLabel.setText("What is meaning of " + questionVal + "?");
         } else {
             randomIndex = random.nextInt(keySet.size());
             aButton.setText(keySet.get(randomIndex));
@@ -878,8 +840,8 @@ public class App extends JPanel {
         }
     }
 
-    private void playButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+    private void startQuizButtonMouseClicked(MouseEvent evt) {
+
         showQuestion();
         aButton.setEnabled(true);
         bButton.setEnabled(true);
@@ -890,58 +852,57 @@ public class App extends JPanel {
     }
 
     private void aButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+
         if (aButton.isEnabled()) {
             String value = aButton.getText();
             if (value.equals(answerVal)) {
-                JOptionPane.showMessageDialog(this, "Correct (^.^)");
+                JOptionPane.showMessageDialog(this, "Correct");
             } else {
-                JOptionPane.showMessageDialog(this, "Incorrect (=.=). Please try again.");
+                JOptionPane.showMessageDialog(this, "Incorrect");
             }
         }
     }
 
     private void bButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+
         if (bButton.isEnabled()) {
             String value = bButton.getText();
             if (value.equals(answerVal)) {
-                JOptionPane.showMessageDialog(this, "Correct (^.^)");
+                JOptionPane.showMessageDialog(this, "Correct");
             } else {
-                JOptionPane.showMessageDialog(this, "Incorrect (=.=). Please try again.");
+                JOptionPane.showMessageDialog(this, "Incorrect");
             }
         }
     }
 
     private void cButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+
         if (cButton.isEnabled()) {
             String value = cButton.getText();
             if (value.equals(answerVal)) {
-                JOptionPane.showMessageDialog(this, "Correct (^.^)");
+                JOptionPane.showMessageDialog(this, "Correct");
             } else {
-                JOptionPane.showMessageDialog(this, "Incorrect (=.=). Please try again.");
+                JOptionPane.showMessageDialog(this, "Incorrect");
             }
         }
     }// GEN-LAST:event_cButtonMouseClicked
 
     private void dButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+
         if (dButton.isEnabled()) {
             String value = dButton.getText();
             if (value.equals(answerVal)) {
-                JOptionPane.showMessageDialog(this, "Correct (^.^)");
+                JOptionPane.showMessageDialog(this, "Correct");
             } else {
-                JOptionPane.showMessageDialog(this, "Incorrect (=.=). Please try again.");
+                JOptionPane.showMessageDialog(this, "Incorrect");
             }
         }
     }// GEN-LAST:event_dButtonMouseClicked
 
-    private void modeComboBoxActionPerformed(ActionEvent evt) {
+    private void quizModeActionPerformed(ActionEvent evt) {
     }
 
     private void stopButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
         if (stopButton.isEnabled()) {
             aButton.setEnabled(false);
             bButton.setEnabled(false);
@@ -950,18 +911,11 @@ public class App extends JPanel {
             stopButton.setEnabled(false);
             nextButton.setEnabled(false);
 
-            aButton.setText("A. ");
-            bButton.setText("B. ");
-            cButton.setText("C. ");
-            dButton.setText("D. ");
+            aButton.setText("A");
+            bButton.setText("B");
+            cButton.setText("C");
+            dButton.setText("D");
             questionLabel.setText("Question: ");
-        }
-    }// GEN-LAST:event_stopButtonMouseClicked
-
-    private void nextButtonMouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
-        if (nextButton.isEnabled()) {
-            showQuestion();
         }
     }
 
@@ -972,15 +926,9 @@ public class App extends JPanel {
 
         App newContentPane = new App();
         newContentPane.setOpaque(true);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent windowEvent) {
-                // newContentPane.save();
-            }
-        });
-
         frame.setContentPane(newContentPane);
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setResizable(false);
     }
