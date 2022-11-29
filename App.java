@@ -21,47 +21,50 @@ public class App extends JPanel {
     private HashMap<String, ArrayList<String>> dictionary = new HashMap<String, ArrayList<String>>();
     private HashMap<String, ArrayList<String>> history = new HashMap<String, ArrayList<String>>();
     private String fileName = "slang.txt";
-    private String constantData = "constant.txt";
-    private UI ui;
+    private String constantData = "standardData";
+    private String historyData = "historySearch.txt";
     private Dictionary dic;
     private Dictionary histoSerial;
     ArrayList<String> keySet;
     private DefaultTableModel model;
 
     public App() throws IOException {
-        dictionary = loadDictionaryFromTextFile(fileName);
-        dic.setDictionary(dictionary);
-        keySet = new ArrayList<String>(dictionary.keySet());
-        setupUI();
+        // dictionary = loadDictionaryFromTextFile(fileName);
+        // dic.setDictionary(dictionary);
+        dic = new Dictionary();
+        histoSerial = new Dictionary();
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(constantData));
+            dic = (Dictionary) ois.readObject();
+            dictionary = dic.getDictionary();
+            ois.close();
+            // System.out.println("read serialize");
+        } catch (Exception e) {
+            dictionary = loadDictionaryFromTextFile(fileName);
+            try {
+                dic.setDictionary(dictionary);
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(historyData));
+                oos.writeObject(dic);
 
-        model = new DefaultTableModel();
-        Vector headerColumn = new Vector();
-        headerColumn.add("ID");
-        headerColumn.add("Slang");
-        headerColumn.add("Definition");
-
-        model.setColumnIdentifiers(headerColumn);
-        // set data
-        int i = 0;
-        for (Map.Entry<String, ArrayList<String>> entry : dictionary.entrySet()) {
-
-            ArrayList<String> values = entry.getValue();
-
-            for (String e : values) {
-                i++;
-                Vector row = new Vector();
-                row.add(i);
-                row.add(entry.getKey());
-                row.add(e);
-                model.addRow(row);
+                oos.close();
+            } catch (Exception exp) {
+                // System.out.println("can't serialize");
             }
-
+        }
+        // history
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(historyData));
+            histoSerial = (Dictionary) ois.readObject();
+            history = histoSerial.getDictionary();
+            ois.close();
+            // System.out.println("read history serialize");
+        } catch (Exception e) {
+            // System.out.println("can't history serialize");
         }
 
-        ui.slangTable.setModel(model);
-        ui.slangTable.getColumnModel().getColumn(0).setMaxWidth(45);
-        ui.slangTable.getColumnModel().getColumn(1).setMaxWidth(120);
-        ui.slangTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        keySet = new ArrayList<String>(dictionary.keySet());
+        setupUI();
+        loadDataIntoTable(dictionary);
 
     }
 
@@ -73,20 +76,23 @@ public class App extends JPanel {
             fileReader = new BufferedReader(new FileReader(fileName));
             fileReader.readLine();
             while ((line = fileReader.readLine()) != null) {
-                String[] tokens = line.split("`");
-                String slang = tokens[0];
-                ArrayList<String> definition = new ArrayList<String>(Arrays.asList(tokens[1].split("\\| ")));
-                if (dictionary.containsKey(slang) == true) {
-                    ArrayList<String> oldDefinition = dictionary.get(slang);
-                    definition.addAll(oldDefinition);
+                if (line.contains("`")) {
+                    String[] tokens = line.split("`");
+                    String slang = tokens[0];
+                    ArrayList<String> definition = new ArrayList<String>(Arrays.asList(tokens[1].split("\\| ")));
+                    if (dictionary.containsKey(slang) == true) {
+                        ArrayList<String> oldDefinition = dictionary.get(slang);
+                        definition.addAll(oldDefinition);
+                    }
+                    dictionary.put(slang, definition);
                 }
-                dictionary.put(slang, definition);
             }
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("Error in readFromTextFile !!!");
             e.printStackTrace();
         }
+        System.out.println("Load Dictionary Data Successful !!");
         return dictionary;
     }
 
@@ -113,72 +119,70 @@ public class App extends JPanel {
                 row.add(e);
                 model.addRow(row);
             }
-
         }
-
         slangTable.setModel(model);
         slangTable.getColumnModel().getColumn(0).setMaxWidth(45);
         slangTable.getColumnModel().getColumn(1).setMaxWidth(120);
         slangTable.getColumnModel().getColumn(1).setPreferredWidth(100);
     }
 
-    String appTitle = "SLANG WORDS DICTIONARY";
-
-    JPanel featurePanel;
-    JPanel headerPane;
-    JLabel titleLabel;
-    JPanel searchPanel;
-    JLabel searchLabel;
-    JTextField searchField;
-    JComboBox searchType;
-    JButton searchButton;
-    JButton historyButton;
-    JPanel tablePanel;
-    JScrollPane tableScrollPanel;
-    JTable slangTable;
-    JPanel resetPanel;
-    JButton resetButton;
-    JPanel leftPanel;
-    JPanel randomPanel;
-    JButton randomButton;
-    JLabel randomLabel;
-    JPanel detailPanel;
-    JPanel inputDetailPanel;
-    JLabel slangLabel;
-    JTextField slangField;
-    JLabel definitionLabel;
-    JTextField definitionField;
-    JPanel addEditPanel;
-    JButton addButton;
-    JButton editButton;
-    JButton deleteButton;
+    public String appTitle = "SLANG WORDS DICTIONARY";
+    public JPanel featurePanel;
+    public JPanel headerPane;
+    public JLabel titleLabel;
+    public JPanel searchPanel;
+    public JLabel searchLabel;
+    public JTextField searchField;
+    public JComboBox searchType;
+    public JButton searchButton;
+    public JButton historyButton;
+    public JPanel tablePanel;
+    public JScrollPane tableScrollPanel;
+    public JTable slangTable;
+    public JPanel resetPanel;
+    public JButton resetButton;
+    public JPanel leftPanel;
+    public JPanel randomPanel;
+    public JButton randomButton;
+    public JLabel randomLabel;
+    public JPanel detailPanel;
+    public JPanel inputDetailPanel;
+    public JLabel slangLabel;
+    public JTextField slangField;
+    public JLabel definitionLabel;
+    public JTextField definitionField;
+    public JPanel addEditPanel;
+    public JButton addButton;
+    public JButton editButton;
+    public JButton deleteButton;
 
     public void setupUI() {
-        featurePanel = new JPanel();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        headerPane = new JPanel();
         titleLabel = new JLabel();
         searchPanel = new JPanel();
         searchLabel = new JLabel();
-        searchField = new JTextField();
+        searchField = new JTextField(20);
         searchType = new JComboBox<>();
         searchButton = new JButton();
         historyButton = new JButton();
+
         tablePanel = new JPanel();
         tableScrollPanel = new JScrollPane();
         slangTable = new JTable();
         resetPanel = new JPanel();
         resetButton = new JButton();
-        leftPanel = new JPanel();
+
+        featurePanel = new JPanel();
         randomPanel = new JPanel();
         randomButton = new JButton();
         randomLabel = new JLabel();
         detailPanel = new JPanel();
         inputDetailPanel = new JPanel();
         slangLabel = new JLabel();
-        slangField = new JTextField(15);
+        slangField = new JTextField(20);
         definitionLabel = new JLabel();
-        definitionField = new JTextField(15);
+        definitionField = new JTextField(20);
         addEditPanel = new JPanel();
         addButton = new JButton();
         editButton = new JButton();
@@ -200,6 +204,8 @@ public class App extends JPanel {
         // nextButton = new JButton();
 
         titleLabel.setText(appTitle);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 30));
+        add(titleLabel, CENTER_ALIGNMENT);
         // begin: search panel
         searchLabel.setText("Keyword: ");
 
@@ -240,6 +246,12 @@ public class App extends JPanel {
             }
         });
         // End: search panel
+        searchPanel.setLayout(new FlowLayout());
+        searchPanel.add(searchLabel);
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        searchPanel.add(historyButton);
+        add(searchPanel, LEFT_ALIGNMENT);
 
         // Start: Dictionary panel
         slangTable.setModel(new DefaultTableModel(
@@ -274,6 +286,8 @@ public class App extends JPanel {
         });
         resetPanel.add(resetButton);
         // End: dictionary Panel
+        tablePanel.add(tableScrollPanel);
+        add(tablePanel);
 
         // Start: Feature Panel
         randomButton.setText("Random Slang");
@@ -360,7 +374,7 @@ public class App extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 1;
         featurePanel.add(definitionField, gbc);
-        featurePanel.setBorder(new CompoundBorder(new TitledBorder("Name"), new EmptyBorder(5, 5, 5, 5)));
+        featurePanel.setBorder(new CompoundBorder(new TitledBorder("Function"), new EmptyBorder(5, 5, 5, 5)));
         add(featurePanel);
 
         // playPane.setBorder(javax.swing.BorderFactory.createLineBorder(new
@@ -831,5 +845,30 @@ public class App extends JPanel {
 
     private void randomButtonMouseClicked(java.awt.event.MouseEvent evt) {
         randomSlang();
-    }// G
+    }
+
+    public static void createAndShowGUI() throws IOException {
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        JFrame frame = new JFrame("Slang Words Dictionary");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        App newContentPane = new App();
+        newContentPane.setOpaque(true);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                // newContentPane.save();
+            }
+        });
+
+        frame.setContentPane(newContentPane);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setResizable(false);
+    }
+
+    public static void main(String[] args) throws IOException {
+        // write your code here
+        App.createAndShowGUI();
+    }
 }

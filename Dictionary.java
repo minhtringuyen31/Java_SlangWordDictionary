@@ -20,31 +20,6 @@ public class Dictionary {
         this._dictionary = dictionary;
     }
 
-    public static HashMap<String, ArrayList<String>> loadDictionaryFromTextFile(String fileName) {
-        HashMap<String, ArrayList<String>> dictionary = new HashMap<String, ArrayList<String>>();
-        BufferedReader fileReader = null;
-        try {
-            String line = "";
-            fileReader = new BufferedReader(new FileReader(fileName));
-            fileReader.readLine();
-            while ((line = fileReader.readLine()) != null) {
-                String[] tokens = line.split("`");
-                String slang = tokens[0];
-                ArrayList<String> definition = new ArrayList<String>(Arrays.asList(tokens[1].split("\\| ")));
-                if (dictionary.containsKey(slang) == true) {
-                    ArrayList<String> oldDefinition = dictionary.get(slang);
-                    definition.addAll(oldDefinition);
-                }
-                dictionary.put(slang, definition);
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println("Error in readFromTextFile !!!");
-            e.printStackTrace();
-        }
-        return dictionary;
-    }
-
     public HashMap<String, ArrayList<String>> searchByKeySlang(String key) {
         // Option: chuyen key ve dang chu thuong
         // String standardKey = key.toLowerCase();
