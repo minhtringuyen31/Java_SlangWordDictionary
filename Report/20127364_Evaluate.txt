@@ -1,0 +1,27 @@
+CSC13002 – LẬP TRÌNH ỨNG DỤNG JAVA
+Đồ án 02: SLANG WORD
+
+Họ và tên: Nguyễn Võ Minh Trí
+MSSV: 20127364
+
+## Đánh giá mức độ hoàn thành
+1. Chức năng tìm kiếm theo slang word. (Hoàn thành +10)
+2. Chức năng tìm kiếm theo definition, hiển thị ra tất cả các slang words mà trong defintion có chứa keyword gõ vào. (Hoàn thành +10)
+3. Chức năng hiển thị history, danh sách các slang word đã tìm kiếm. (Hoàn thành +10)
+4. Chức năng add 1 slang words mới. Nếu slang words trùng thì thông báo cho người dùng, confirm có overwrite hay duplicate ra 1 slang word mới. (Hoàn thành +10)
+5. Chức năng edit 1 slang word. (Hoàn thành +10)
+6. Chức năng delete 1 slang word. Confirm trước khi xoá. (Hoàn thành +10)
+7. Chức năng reset danh sách slang words gốc. (Hoàn thành +10)
+8. Chức năng random 1 slang word (On this day slang word). (Hoàn thành +10)
+9. Chức năng đố vui, chương trình hiển thị 1 random slang word, với 4 đáp án cho người dùng chọn. (Hoàn thành +10)
+10. Chức năng đố vui, chương trình hiển thị 1 definition, với 4 slang words đáp án cho người dùng chọn. (Hoàn thành +10)
+
+Hoàn thành dầy đủ chức năng: 100 điểm
+
+## Link demo: https://youtu.be/qgJdUgg9GVU 
+## Nội dung tham khảo:
+- Load dữ liệu từ file text vào cấu trúc dữ liệu HashMap.
+- Cách sử dụng Java Swing tạo giao diện người dùng.
+
+
+

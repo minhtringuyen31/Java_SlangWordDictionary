@@ -331,6 +331,7 @@ public class App extends JPanel {
         searchPanel.setLayout(new FlowLayout());
         searchPanel.add(searchLabel);
         searchPanel.add(searchField);
+        searchPanel.add(searchType);
         searchPanel.add(searchButton);
         searchPanel.add(historyButton);
         searchPanel.add(displayDictionary);
